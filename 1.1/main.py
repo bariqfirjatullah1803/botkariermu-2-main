@@ -51,9 +51,6 @@ email_login = "101digimind@gmail.com"
 password_login = "Mitra.Karisma22"
 
 xpath_input = '//*[@id="__BVID__57"]'
-xpath_tanggal = '//*[@id="__BVID__61"]/tbody/tr/td[1]/div'
-xpath_nama = '//*[@id="__BVID__61"]/tbody/tr/td[2]/div'
-xpath_persen = '//*[@id="__BVID__61"]/tbody/tr/td[6]/div'
 
 
 driver = webdriver.Chrome(executable_path=r'driver\chromedriver.exe',chrome_options=chrome_options)
@@ -93,23 +90,30 @@ for line in Lines:
     print(line.strip())
     e = driver.find_element(By.XPATH,xpath_input)
     e.send_keys(line.strip())
-    sleep(3)
+    sleep(2)
     try:
-        tanggal = driver.find_element(By.XPATH,xpath_tanggal).get_attribute("innerText")
-        nama = driver.find_element(By.XPATH,xpath_nama).get_attribute("innerText")
-        partisipasi = driver.find_element(By.XPATH,xpath_persen).get_attribute("innerText")
-        with open('result.txt', 'a') as f:
-            f.write("Valid")
-            f.write('\t')
-            f.write(line.strip())
-            f.write('\t')
-            f.write(tanggal)
-            f.write('\t')
-            f.write(nama)
-            f.write('\t')
-            f.write(partisipasi)
-            f.write('\n')
-        e.clear()
+        rows = len(driver.find_elements(By.XPATH,'/html/body/div[2]/div[3]/div[5]/div[1]/div[3]/div/div/div[3]/div/div[5]/table/tbody/tr'))
+
+        if(rows == 1):
+            for x in range(rows):
+                x+=1
+                td = len(driver.find_elements(By.XPATH,'/html/body/div[2]/div[3]/div[5]/div[1]/div[3]/div/div/div[3]/div/div[5]/table/tbody/tr['+str(x)+']/td'))
+                f1 = open('result.txt', 'a')
+                f1.write("Valid\t")
+                for y in range(td):
+                    y+=1
+                    text = driver.find_element(By.XPATH,'/html/body/div[2]/div[3]/div[5]/div[1]/div[3]/div/div/div[3]/div/div[5]/table/tbody/tr['+str(x)+']/td['+str(y)+']').get_attribute("innerText")
+                    f1.write(text+"\t")
+                f1.write("\n")
+                f1.close() 
+                e.clear()
+        else:
+            with open('result.txt', 'a') as f:
+                f.write("Similar")
+                f.write('\t')
+                f.write(line.strip())
+                f.write('\n')
+                e.clear()
     except:
         with open('result.txt', 'a') as f:
             f.write("Invalid")
