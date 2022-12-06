@@ -99,14 +99,23 @@ for line in Lines:
                 x+=1
                 td = len(driver.find_elements(By.XPATH,'/html/body/div[2]/div[3]/div[5]/div[1]/div[3]/div/div/div[3]/div/div[5]/table/tbody/tr['+str(x)+']/td'))
                 f1 = open('result.txt', 'a')
-                f1.write("Valid\t")
-                for y in range(td):
-                    y+=1
-                    text = driver.find_element(By.XPATH,'/html/body/div[2]/div[3]/div[5]/div[1]/div[3]/div/div/div[3]/div/div[5]/table/tbody/tr['+str(x)+']/td['+str(y)+']').get_attribute("innerText")
-                    f1.write(text+"\t")
-                f1.write("\n")
-                f1.close() 
-                e.clear()
+                if(td > 1):
+                    f1.write("Valid\t")
+                    for y in range(td):
+                        y+=1
+                        text = driver.find_element(By.XPATH,'/html/body/div[2]/div[3]/div[5]/div[1]/div[3]/div/div/div[3]/div/div[5]/table/tbody/tr['+str(x)+']/td['+str(y)+']').get_attribute("innerText")
+                        f1.write(text+"\t")
+                    f1.write("\n")
+                    f1.close() 
+                    e.clear()
+                else:
+                    with open('result.txt', 'a') as f:
+                        f.write("Invalid")
+                        f.write('\t')
+                        f.write(line.strip())
+                        f.write('\n')
+                        e.clear()
+
         else:
             with open('result.txt', 'a') as f:
                 f.write("Similar")
